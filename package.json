@@ -1,0 +1,30 @@
+{
+  "name": "jquery-transition.js",
+  "version": "0.8.0",
+  "description": "CSS3 Transition with jQuery",
+  "main": "dist/jquery-transition.js",
+  "dependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-uglify": "~0.2.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/mach3/jquery-transition.js"
+  },
+  "keywords": [
+    "jquery",
+    "css3",
+    "transition",
+    "animate"
+  ],
+  "author": "mach3",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mach3/jquery-transition.js/issues"
+  }
+}
