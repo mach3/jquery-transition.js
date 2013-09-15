@@ -1,7 +1,7 @@
 /*!
  * jquery-transition.js
  * --------------------
- * @version 0.8.0
+ * @version 0.8.1
  * @author mach3
  * @license MIT License
  * @url http://github.com/mach3/jquery-transtion.js
@@ -65,13 +65,16 @@
 	 * @param Object options
 	 */
 	$.fn.transition = function(styles, options){
-		var transition;
+		var transition, dfd, process = [];
+
+		dfd = $.Deferred();
+		dfd.promise(this);
 
 		options = $.extend({
 			delay: 0, // delay for animation
 			duration: 500, // duration for animation
 			easing: "ease-out", // easing function
-			done: $.noop // callback when done
+			complete: $.noop // callback when complete
 		}, options);
 
 		if($.support.transition){
@@ -83,38 +86,50 @@
 			options.easing = $.transitionEasings[options.easing] || $.transitionEasing.common;
 		}
 
-		this.data("onTransitionEnd", options.done);
+		this.data("onTransitionEnd", options.complete);
 
 		this.each(function(){
-			var node, eventName;
-			
-			node = $(this);
+			var node = $(this);
+
 			if(! $.support.transition){
-				node.stop().delay(options.delay).animate(styles, options);
+				process.push(node.stop().delay(options.delay).animate(styles, options));
 				return;
 			}
-			eventName = $.support.transitionInfo.eventName;
-			node.css("transition", transition);
-			node.off(eventName);
-			node.on(eventName, function(e){
-				var node, handler;
-				node = $(this);
-				handler = node.data("onTransitionEnd");
-				node.css("transition", "");
-				node.off(e.type);
-				node.data("onTransitionEnd", undefined);
-				if($.isFunction(handler)){
-					handler.apply(this, arguments);
-				}
-			});
-			// fallback for the case nothing changed
-			setTimeout(
-				$.proxy(function(){
-					this.trigger($.support.transitionInfo.eventName);
-				}, node),
-				options.duration + 10
-			);
-			node.css(styles);
+
+			process.push(function(){
+				var _dfd, eventName;
+
+				_dfd = $.Deferred();
+				_dfd.promise(this);
+				eventName = $.support.transitionInfo.eventName;
+				node.css("transition", transition);
+				node.off(eventName);
+				node.on(eventName, function(e){
+					var node, handler;
+					node = $(this);
+					handler = node.data("onTransitionEnd");
+					node.css("transition", "");
+					node.off(e.type);
+					node.data("onTransitionEnd", undefined);
+					if($.isFunction(handler)){
+						handler.apply(this);
+					}
+					_dfd.resolve();
+				});
+				// just in case nothing changed
+				setTimeout(
+					$.proxy(function(){
+						this.trigger($.support.transitionInfo.eventName);
+					}, node),
+					options.duration + 10
+				);
+				node.css(styles);
+				return this;
+			}());
+		});
+
+		$.when.apply($, process).then(function(){
+			dfd.resolve();
 		});
 
 		return this;

@@ -1,6 +1,6 @@
 {
   "name": "jquery-transition.js",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "CSS3 Transition with jQuery",
   "main": "dist/jquery-transition.js",
   "dependencies": {

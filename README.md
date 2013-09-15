@@ -17,7 +17,7 @@ $(el).transition(
         delay: 0,
         duration: 1000,
         easing: "ease",
-        done: function(){
+        complete: function(){
             console.log("transition done");
         }
     }
@@ -27,9 +27,9 @@ $(el).transition(
 ## Options
 
 - delay:Integer (0) - Delay time for animation
-- duration:Integer (0) - Duration time for animation
+- duration:Integer (500) - Duration time for animation
 - easing:String ("ease-in") - Easing function name for CSS3 Transition
-- done:Function ($.noop) - Callback function
+- complete:Function ($.noop) - Callback function
 
 
 ## Author

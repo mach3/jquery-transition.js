@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo</title>
+
+    <style>
+    .box {
+        float: left;
+        width: 100px;
+        height: 100px;
+    }
+
+    .foo {
+        background-color: #c00;
+    }
+    .bar {
+        background-color: #00c;
+    }
+    .baz {
+        background-color: #0c0;
+    }
+    #log {
+        clear: both;
+        list-style-type: none;
+        padding: 2em;
+    }
+    </style>
+</head>
+<body>
+
+    <div class="box foo"></div>
+    <div class="box bar"></div>
+    <div class="box baz"></div>
+
+    <div class="box foo"></div>
+    <div class="box bar"></div>
+    <div class="box baz"></div>
+
+    <ul id="log"></ul>
+
+    <script src="../bower_components/jquery/jquery.js"></script>
+    <script src="../bower_components/jquery-easing/jquery.easing.js"></script>
+    <script src="../src/jquery-transition.js"></script>
+    <script>
+
+    var log = function(msg){
+        msg = [].slice.call(arguments).join(" ");
+        $("<li>").append(msg).appendTo($("#log"));
+    };
+
+    $.when(
+        $(".box.foo").transition({
+            width: 200,
+            height: 200
+        }, {
+            delay: 0,
+            duration: 1000,
+            easing: "ease",
+            complete: function(){
+                log("complete: ", $(this).attr("class"));
+            }
+        }),
+        $(".box.bar").transition({
+            width: 200,
+            height: 200
+        }, {
+            delay: 200,
+            duration: 1200,
+            easing: "ease",
+            complete: function(){
+                log("complete: ", $(this).attr("class"));
+            }
+        }),
+        $(".box.baz").transition({
+            width: 200,
+            height: 200
+        }, {
+            delay: 300,
+            duration: 1300,
+            easing: "ease",
+            complete: function(){
+                log("complete: ", $(this).attr("class"));
+            }
+        })
+    ).done(function(){
+        log("all done");
+    });
+
+    </script>
+
+</body>
+</html>
